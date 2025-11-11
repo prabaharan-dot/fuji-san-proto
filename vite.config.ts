@@ -5,6 +5,7 @@
 
   export default defineConfig({
     plugins: [react()],
+    base:'/fuji-san-proto/',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
