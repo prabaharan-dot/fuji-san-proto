@@ -55,7 +55,7 @@ export function Sidebar({
             alt="RevenueTrack Logo"
             className="w-8 h-8 rounded-lg object-cover"
           />
-          <span className="text-slate-900">Fujisan AI</span>
+          <span className="text-slate-900">FujiSan AI</span>
         </div>
       </div>
 
