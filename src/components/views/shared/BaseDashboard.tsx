@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
 import { ArrowUpRight, ArrowDownRight, DollarSign, Users, Target, Zap, Trophy, TrendingUp, Award, Star } from 'lucide-react';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Avatar, AvatarFallback } from './ui/avatar';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Avatar, AvatarFallback } from '../../ui/avatar';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { ViewType } from '../App';
 
 interface DashboardProps {
-  onNavigate: (view: ViewType) => void;
+  // generic navigation handler to support both admin and user views
+  onNavigate: (view: any) => void;
 }
 
 const revenueData = [
@@ -47,7 +47,7 @@ const teamLeaderboard = [
   { id: 4, name: 'New Markets', members: 10, points: 12340, conversions: 214, revenue: 287400, avgConversionRate: 34.2, trend: 'down' },
 ];
 
-export function Dashboard({ onNavigate }: DashboardProps) {
+export default function Dashboard({ onNavigate }: DashboardProps) {
   const topPerformer = employeeLeaderboard[0];
 
   return (
