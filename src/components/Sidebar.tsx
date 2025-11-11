@@ -6,50 +6,74 @@ import {
   Settings,
   HelpCircle,
   Plug,
+  User,
+  Star,
 } from "lucide-react";
-import { ViewType } from "../App";
+import type { AppView } from "../App";
 
 interface SidebarProps {
-  currentView: ViewType;
-  onNavigate: (view: ViewType) => void;
+  currentView: AppView;
+  onNavigate: (view: AppView) => void;
+  role: "admin" | "user";
 }
 
 export function Sidebar({
   currentView,
   onNavigate,
+  role,
 }: SidebarProps) {
-  const navItems = [
+  const adminItems = [
     {
-      id: "dashboard" as ViewType,
+      id: "dashboard" as AppView,
       label: "Dashboard",
       icon: LayoutDashboard,
     },
     {
-      id: "revenue" as ViewType,
+      id: "revenue" as AppView,
       label: "Revenue Goals",
       icon: Target,
     },
     {
-      id: "leads" as ViewType,
+      id: "leads" as AppView,
       label: "Lead Conversions",
       icon: TrendingUp,
     },
     {
-      id: "campaigns" as ViewType,
+      id: "campaigns" as AppView,
       label: "AI Campaigns",
       icon: Sparkles,
     },
     {
-      id: "setup" as ViewType,
+      id: "setup" as AppView,
       label: "Setup",
       icon: Settings,
     },
     {
-      id: "integrations" as ViewType,
+      id: "integrations" as AppView,
       label: "Integrations",
       icon: Plug,
     },
   ];
+
+  const userItems = [
+    {
+      id: "dashboard" as AppView,
+      label: "Dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      id: "profile" as AppView,
+      label: "My Profile",
+      icon: User,
+    },
+    {
+      id: "leaderboard" as AppView,
+      label: "Leaderboard",
+      icon: Star,
+    },
+  ];
+
+  const navItems = role === "admin" ? adminItems : userItems;
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
@@ -67,12 +91,12 @@ export function Sidebar({
       <nav className="flex-1 p-4">
         <div className="space-y-1">
           {navItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = item.icon as any;
             const isActive = currentView === item.id;
 
             return (
               <button
-                key={item.id}
+                key={String(item.id)}
                 onClick={() => onNavigate(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive
