@@ -1,7 +1,8 @@
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { Plus, TrendingUp, Calendar } from 'lucide-react';
+import { Plus, TrendingUp, Calendar, Sparkles } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 const monthlyData = [
@@ -21,7 +22,37 @@ const goals = [
   { id: 3, name: 'New Customer Revenue', current: 84000, target: 120000, deadline: '2025-09-30', status: 'at-risk' },
 ];
 
+function computeInsights(goal: { current: number; target: number; deadline: string; status: string }) {
+  const now = new Date();
+  const deadline = new Date(goal.deadline);
+  const msLeft = deadline.getTime() - now.getTime();
+  const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
+  const remaining = Math.max(0, goal.target - goal.current);
+  const monthsLeft = Math.max(1, Math.ceil(daysLeft / 30));
+  const neededPerMonth = Math.ceil(remaining / monthsLeft);
+
+  const atRiskItems: string[] = [];
+  if (goal.status !== 'on-track') atRiskItems.push('Behind expected pace');
+  if (remaining > goal.target * 0.2) atRiskItems.push('Large revenue gap remaining');
+  if (daysLeft < 30) atRiskItems.push('Short time to deadline');
+
+  const recommendations: string[] = [];
+  recommendations.push(`Target additional ~$${neededPerMonth.toLocaleString()} / month`);
+  recommendations.push('Prioritize high-converting campaigns and top sources');
+  recommendations.push('Reassign top performers to high-value accounts');
+  recommendations.push('Launch targeted AI campaigns for pipeline acceleration');
+
+  return {
+    daysLeft,
+    remaining,
+    neededPerMonth,
+    atRiskItems,
+    recommendations,
+  };
+}
+
 export function RevenueGoals() {
+  const [openGoal, setOpenGoal] = useState<number | null>(null);
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
@@ -131,24 +162,66 @@ export function RevenueGoals() {
                         </span>
                       </div>
                     </div>
-                    <span
-                      className={`px-3 py-1 rounded-full ${
-                        goal.status === 'on-track'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-amber-100 text-amber-700'
-                      }`}
-                    >
-                      {goal.status === 'on-track' ? 'On Track' : 'At Risk'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`px-3 py-1 rounded-full ${
+                          goal.status === 'on-track'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-amber-100 text-amber-700'
+                        }`}
+                      >
+                        {goal.status === 'on-track' ? 'On Track' : 'At Risk'}
+                      </span>
+                      <Button variant="outline" size="sm" onClick={() => setOpenGoal(openGoal === goal.id ? null : goal.id)}>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        AI Insights
+                      </Button>
+                    </div>
                   </div>
+
+                  {/* Insights panel */}
+                  {openGoal === goal.id && (
+                    (() => {
+                      const insights = computeInsights(goal);
+                      return (
+                        <div className="mb-4 p-4 bg-slate-50 rounded">
+                          <div className="mb-2">
+                            <strong className="text-slate-900">Overview</strong>
+                            <p className="text-slate-600 text-sm mt-1">{insights.daysLeft} days left • ${insights.remaining.toLocaleString()} remaining</p>
+                          </div>
+                          <div className="mb-2">
+                            <strong className="text-slate-900">At-risk items</strong>
+                            {insights.atRiskItems.length ? (
+                              <ul className="list-disc list-inside text-slate-600 text-sm mt-1">
+                                {insights.atRiskItems.map((it) => (
+                                  <li key={it}>{it}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p className="text-slate-600 text-sm mt-1">No immediate at-risk flags</p>
+                            )}
+                          </div>
+                          <div>
+                            <strong className="text-slate-900">Recommendations</strong>
+                            <ul className="list-disc list-inside text-slate-600 text-sm mt-1">
+                              {insights.recommendations.map((r) => (
+                                <li key={r}>{r}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      );
+                    })()
+                  )}
+
                   <Progress value={progress} className="mb-2" />
                   <p className="text-slate-600">{Math.round(progress)}% complete</p>
                 </div>
               );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+             })}
+           </div>
+         </CardContent>
+       </Card>
+     </div>
+   );
+ }
