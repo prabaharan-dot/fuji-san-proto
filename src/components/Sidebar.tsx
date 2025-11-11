@@ -67,10 +67,16 @@ export function Sidebar({
       icon: User,
     },
     {
+      id: 'myleads' as AppView,
+      label: "My Leads",
+      icon: TrendingUp
+    },
+    {
       id: "leaderboard" as AppView,
       label: "Leaderboard",
       icon: Star,
     },
+
   ];
 
   const navItems = role === "admin" ? adminItems : userItems;
