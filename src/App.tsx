@@ -5,8 +5,9 @@ import { RevenueGoals } from './components/RevenueGoals';
 import { LeadConversions } from './components/LeadConversions';
 import { AICampaigns } from './components/AICampaigns';
 import { Integrations } from './components/Integrations';
+import { BadgeSetup } from './components/Setup/BadgeSetup.tsx';
 
-export type ViewType = 'dashboard' | 'revenue' | 'leads' | 'campaigns' | 'integrations';
+export type ViewType = 'dashboard' | 'revenue' | 'leads' | 'campaigns' | 'integrations' | 'setup';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewType>('dashboard');
@@ -23,6 +24,8 @@ export default function App() {
         return <AICampaigns />;
       case 'integrations':
         return <Integrations />;
+      case 'setup':
+        return <BadgeSetup />;
       default:
         return <Dashboard onNavigate={setCurrentView} />;
     }

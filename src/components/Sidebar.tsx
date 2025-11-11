@@ -40,6 +40,11 @@ export function Sidebar({
       icon: Sparkles,
     },
     {
+      id: "setup" as ViewType,
+      label: "Setup",
+      icon: Settings,
+    },
+    {
       id: "integrations" as ViewType,
       label: "Integrations",
       icon: Plug,

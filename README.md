@@ -1,7 +1,17 @@
 
-  # Clickable Prototype for Revenue Tracking
+  # Fujisan AI - Prototype
+  # Project desctiption
+    This is a prototype of Fujisan AI -  a tool that will organisation to create their revenue goals, sales targets, etc, and to track their progress by integrating with all the popular CRMs. with the help of AI, we will also provide insights, forecast, lead ranking, personalised follow ups.
 
-  This is a code bundle for Clickable Prototype for Revenue Tracking. The original project is available at https://www.figma.com/design/PzYcZi6QTMdwNffoJalzYH/Clickable-Prototype-for-Revenue-Tracking.
+  # Instructions
+    ignore src/components/figma
+    ignore src/components/ui
+    read through all the other files under src/components
+    strinctly follow guidelines at the src/guidelines/guidelines.md 
+    
+
+
+
 
   ## Running the code
 

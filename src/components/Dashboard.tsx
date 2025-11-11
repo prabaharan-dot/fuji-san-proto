@@ -33,11 +33,11 @@ const leadSourceData = [
 ];
 
 const employeeLeaderboard = [
-  { id: 1, name: 'Sarah Chen', role: 'Senior Sales Rep', points: 2850, leads: 156, conversions: 68, revenue: 89400, trend: 'up', change: 12 },
-  { id: 2, name: 'Michael Rodriguez', role: 'Sales Rep', points: 2720, leads: 142, conversions: 64, revenue: 84200, trend: 'up', change: 8 },
-  { id: 3, name: 'Emily Thompson', role: 'Senior Sales Rep', points: 2640, leads: 138, conversions: 59, revenue: 78900, trend: 'up', change: 15 },
-  { id: 4, name: 'James Park', role: 'Sales Rep', points: 2480, leads: 129, conversions: 54, revenue: 71200, trend: 'down', change: -3 },
-  { id: 5, name: 'Lisa Anderson', role: 'Sales Rep', points: 2350, leads: 121, conversions: 51, revenue: 68500, trend: 'up', change: 5 },
+  { id: 1, name: 'Sarah Chen', role: 'Senior Sales Rep', points: 2850, leads: 156, conversions: 68, revenue: 89400, trend: 'up', change: 12, badges: ['Pipeline Builder', 'Deal Closer'] },
+  { id: 2, name: 'Michael Rodriguez', role: 'Sales Rep', points: 2720, leads: 142, conversions: 64, revenue: 84200, trend: 'up', change: 8, badges: ['Deal Closer'] },
+  { id: 3, name: 'Emily Thompson', role: 'Senior Sales Rep', points: 2640, leads: 138, conversions: 59, revenue: 78900, trend: 'up', change: 15, badges: ['Raising Star'] },
+  { id: 4, name: 'James Park', role: 'Sales Rep', points: 2480, leads: 129, conversions: 54, revenue: 71200, trend: 'down', change: -3, badges: [] },
+  { id: 5, name: 'Lisa Anderson', role: 'Sales Rep', points: 2350, leads: 121, conversions: 51, revenue: 68500, trend: 'up', change: 5, badges: ['First Win'] },
 ];
 
 const teamLeaderboard = [
@@ -58,7 +58,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       </div>
 
       {/* Top Performer Highlight */}
-      <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+      <Card className="mb-8 bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200 hide">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
@@ -198,6 +198,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className="text-slate-900">{employee.name}</span>
+                        {employee.badges && employee.badges.length > 0 && (
+                          <div className="flex items-center gap-1 ml-2">
+                            {employee.badges.map((b) => (
+                              <Badge key={b} variant="outline" className="text-xs px-2 py-0.5">
+                                {b}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                         {index === 0 && <Award className="w-4 h-4 text-amber-500" />}
                       </div>
                       <p className="text-slate-600">{employee.role}</p>
