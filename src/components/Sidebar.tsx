@@ -1,85 +1,34 @@
-import {
-  LayoutDashboard,
-  Target,
-  TrendingUp,
-  Sparkles,
-  Settings,
-  HelpCircle,
-  Plug,
-  User,
-  Star,
-} from "lucide-react";
-import type { AppView } from "../App";
+import { LayoutDashboard, Target, TrendingUp, Sparkles, Settings, HelpCircle, Plug, ShieldCheck, User, Bot, Award } from 'lucide-react';
+import { ViewType, UserRole } from '../App';
+import { Badge } from './ui/badge';
 
 interface SidebarProps {
-  currentView: AppView;
-  onNavigate: (view: AppView) => void;
-  role: "admin" | "user";
+  currentView: ViewType;
+  onNavigate: (view: ViewType) => void;
+  userRole: UserRole;
+  onRoleChange: (role: UserRole) => void;
 }
 
-export function Sidebar({
-  currentView,
-  onNavigate,
-  role,
-}: SidebarProps) {
-  const adminItems = [
-    {
-      id: "dashboard" as AppView,
-      label: "Dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      id: "revenue" as AppView,
-      label: "Revenue Goals",
-      icon: Target,
-    },
-    {
-      id: "leads" as AppView,
-      label: "Lead Conversions",
-      icon: TrendingUp,
-    },
-    {
-      id: "campaigns" as AppView,
-      label: "AI Campaigns",
-      icon: Sparkles,
-    },
-    {
-      id: "setup" as AppView,
-      label: "Setup",
-      icon: Settings,
-    },
-    {
-      id: "integrations" as AppView,
-      label: "Integrations",
-      icon: Plug,
-    },
+export function Sidebar({ currentView, onNavigate, userRole, onRoleChange }: SidebarProps) {
+  const adminNavItems = [
+    { id: 'dashboard' as ViewType, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'revenue' as ViewType, label: 'Revenue Goals', icon: Target },
+    { id: 'leads' as ViewType, label: 'Lead Conversions', icon: TrendingUp },
+    { id: 'campaigns' as ViewType, label: 'AI Campaigns', icon: Sparkles },
+    { id: 'integrations' as ViewType, label: 'Integrations', icon: Plug },
+    { id: 'ai-assistant' as ViewType, label: 'AI Assistant', icon: Bot },
+    { id: 'badges' as ViewType, label: 'Badges & Awards', icon: Award },
   ];
 
-  const userItems = [
-    {
-      id: "dashboard" as AppView,
-      label: "Dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      id: "profile" as AppView,
-      label: "My Profile",
-      icon: User,
-    },
-    {
-      id: 'myleads' as AppView,
-      label: "My Leads",
-      icon: TrendingUp
-    },
-    {
-      id: "leaderboard" as AppView,
-      label: "Leaderboard",
-      icon: Star,
-    },
-
+  const userNavItems = [
+    { id: 'dashboard' as ViewType, label: 'My Dashboard', icon: LayoutDashboard },
+    { id: 'revenue' as ViewType, label: 'My Goals', icon: Target },
+    { id: 'leads' as ViewType, label: 'My Leads', icon: TrendingUp },
+    { id: 'campaigns' as ViewType, label: 'My Campaigns', icon: Sparkles },
+    { id: 'ai-agents' as ViewType, label: 'AI Agents', icon: Bot },
   ];
 
-  const navItems = role === "admin" ? adminItems : userItems;
+  const navItems = userRole === 'admin' ? adminNavItems : userNavItems;
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
@@ -90,19 +39,53 @@ export function Sidebar({
             alt="RevenueTrack Logo"
             className="w-8 h-8 rounded-lg object-cover"
           />
-          <span className="text-slate-900">FujiSan AI</span>
+          <span className="text-slate-900">Fujisan AI - Proto</span>
+        </div>
+      </div>
+
+      {/* View Switcher */}
+      <div className="p-4 border-b border-slate-200">
+        <div className="bg-slate-100 rounded-lg p-1 flex gap-1">
+          <button
+            onClick={() => {
+              onRoleChange('admin');
+              onNavigate('dashboard');
+            }}
+            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md transition-all ${
+              userRole === 'admin'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Admin</span>
+          </button>
+          <button
+            onClick={() => {
+              onRoleChange('user');
+              onNavigate('dashboard');
+            }}
+            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-md transition-all ${
+              userRole === 'user'
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <User className="w-4 h-4" />
+            <span>User</span>
+          </button>
         </div>
       </div>
 
       <nav className="flex-1 p-4">
         <div className="space-y-1">
           {navItems.map((item) => {
-            const Icon = item.icon as any;
+            const Icon = item.icon;
             const isActive = currentView === item.id;
 
             return (
               <button
-                key={String(item.id)}
+                key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
                   isActive
