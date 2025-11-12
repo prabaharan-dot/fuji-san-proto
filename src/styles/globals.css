@@ -183,9 +183,7 @@
     }
   }
 }
-hide{
-  display: none;
-}
+
 html {
   font-size: var(--font-size);
 }

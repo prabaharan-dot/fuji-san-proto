@@ -1,44 +1,74 @@
 import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
-import AdminView, { AdminViewType } from './components/AdminView';
-import UserView, { UserViewType } from './components/UserView';
+import { Dashboard } from './components/Dashboard';
+import { RevenueGoals } from './components/RevenueGoals';
+import { LeadConversions } from './components/LeadConversions';
+import { AICampaigns } from './components/AICampaigns';
+import { Integrations } from './components/Integrations';
+import { UserDashboard } from './components/UserDashboard';
+import { MyGoals } from './components/MyGoals';
+import { MyLeads } from './components/MyLeads';
+import { MyCampaigns } from './components/MyCampaigns';
+import { MyAIAgents } from './components/MyAIAgents';
+import { AdminAIAssistant } from './components/AdminAIAssistant';
+import { AdminBadges } from './components/AdminBadges';
 
-export type AppView = AdminViewType | UserViewType;
+export type ViewType = 'dashboard' | 'revenue' | 'leads' | 'campaigns' | 'integrations' | 'ai-agents' | 'ai-assistant' | 'badges';
+export type UserRole = 'admin' | 'user';
 
 export default function App() {
-  const [role, setRole] = useState<'admin' | 'user'>('admin');
-  const [adminView, setAdminView] = useState<AdminViewType>('dashboard');
-  const [userView, setUserView] = useState<UserViewType>('dashboard');
-  const [showBanner, setShowBanner] = useState(true);
+  const [currentView, setCurrentView] = useState<ViewType>('dashboard');
+  const [userRole, setUserRole] = useState<UserRole>('admin');
 
-  const handleNavigate = (view: AppView) => {
-    if (role === 'admin') setAdminView(view as AdminViewType);
-    else setUserView(view as UserViewType);
+  const renderView = () => {
+    if (userRole === 'admin') {
+      switch (currentView) {
+        case 'dashboard':
+          return <Dashboard onNavigate={setCurrentView} />;
+        case 'revenue':
+          return <RevenueGoals />;
+        case 'leads':
+          return <LeadConversions />;
+        case 'campaigns':
+          return <AICampaigns />;
+        case 'integrations':
+          return <Integrations />;
+        case 'ai-assistant':
+          return <AdminAIAssistant />;
+        case 'badges':
+          return <AdminBadges />;
+        default:
+          return <Dashboard onNavigate={setCurrentView} />;
+      }
+    } else {
+      // User view
+      switch (currentView) {
+        case 'dashboard':
+          return <UserDashboard />;
+        case 'revenue':
+          return <MyGoals />;
+        case 'leads':
+          return <MyLeads />;
+        case 'campaigns':
+          return <MyCampaigns />;
+        case 'ai-agents':
+          return <MyAIAgents />;
+        default:
+          return <UserDashboard />;
+      }
+    }
   };
 
   return (
     <div className="flex h-screen bg-slate-50">
-      <Sidebar
-        currentView={role === 'admin' ? adminView : userView}
-        onNavigate={handleNavigate}
-        role={role}
+      <Sidebar 
+        currentView={currentView} 
+        onNavigate={setCurrentView}
+        userRole={userRole}
+        onRoleChange={setUserRole}
       />
-
       <main className="flex-1 overflow-y-auto">
-        <div className="p-4 flex justify-end">
-          <button
-            onClick={() => setRole(role === 'admin' ? 'user' : 'admin')}
-            className="px-3 py-1 rounded bg-slate-200"
-          >
-            Switch to {role === 'admin' ? 'User' : 'Admin'} view
-          </button>
-        </div>
-
-        {role === 'admin' ? (
-          <AdminView currentView={adminView} onNavigate={setAdminView} />
-        ) : (
-          <UserView currentView={userView} onNavigate={setUserView} />
-        )}
+        {renderView()}
       </main>
     </div>
   );
