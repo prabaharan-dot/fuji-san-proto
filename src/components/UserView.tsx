@@ -1,6 +1,6 @@
-import { Dashboard, MyProfile, Leaderboard } from './views/user';
+import { Dashboard, MyProfile, Leaderboard, MyLeads } from './views/user';
 
-export type UserViewType = 'dashboard' | 'profile' | 'leaderboard';
+export type UserViewType = 'dashboard' | 'profile' | 'leaderboard' | 'myleads';
 
 interface UserViewProps {
   currentView: UserViewType;
@@ -16,6 +16,8 @@ export default function UserView({ currentView, onNavigate }: UserViewProps) {
         return <MyProfile />;
       case 'leaderboard':
         return <Leaderboard />;
+      case 'myleads':
+        return <MyLeads />
       default:
         return <Dashboard onNavigate={onNavigate as any} />;
     }
