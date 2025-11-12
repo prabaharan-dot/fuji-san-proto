@@ -4,333 +4,224 @@ import { Badge } from '../../ui/badge';
 import { Input } from '../../ui/input';
 import { Search, Filter, Plus, Mail, Phone, Calendar, DollarSign } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
+import { useState } from 'react';
 
 const myLeads = [
-  {
-    id: 1,
-    company: 'Acme Corporation',
-    contact: 'John Smith',
-    email: 'john@acme.com',
-    phone: '+1 234-567-8901',
-    status: 'Converted',
-    value: 12500,
-    stage: 'Closed Won',
-    lastContact: '2025-11-08',
-    source: 'AI Campaign',
-  },
-  {
-    id: 2,
-    company: 'Tech Innovations Ltd',
-    contact: 'Sarah Johnson',
-    email: 'sarah@techinnovations.com',
-    phone: '+1 234-567-8902',
-    status: 'Qualified',
-    value: 8900,
-    stage: 'Proposal Sent',
-    lastContact: '2025-11-09',
-    source: 'Referral',
-  },
-  {
-    id: 3,
-    company: 'Global Solutions Inc',
-    contact: 'Michael Chen',
-    email: 'michael@globalsolutions.com',
-    phone: '+1 234-567-8903',
-    status: 'In Progress',
-    value: 15200,
-    stage: 'Demo Scheduled',
-    lastContact: '2025-11-10',
-    source: 'Organic',
-  },
-  {
-    id: 4,
-    company: 'Digital Dynamics',
-    contact: 'Emily Rodriguez',
-    email: 'emily@digitaldynamics.com',
-    phone: '+1 234-567-8904',
-    status: 'Converted',
-    value: 9800,
-    stage: 'Closed Won',
-    lastContact: '2025-11-10',
-    source: 'AI Campaign',
-  },
-  {
-    id: 5,
-    company: 'Future Systems',
-    contact: 'David Park',
-    email: 'david@futuresystems.com',
-    phone: '+1 234-567-8905',
-    status: 'Qualified',
-    value: 11300,
-    stage: 'Needs Analysis',
-    lastContact: '2025-11-11',
-    source: 'LinkedIn',
-  },
-  {
-    id: 6,
-    company: 'Smart Analytics Co',
-    contact: 'Lisa Wong',
-    email: 'lisa@smartanalytics.com',
-    phone: '+1 234-567-8906',
-    status: 'New',
-    value: 7600,
-    stage: 'Initial Contact',
-    lastContact: '2025-11-11',
-    source: 'AI Campaign',
-  },
+	{
+		id: 1,
+		company: 'Acme Corporation',
+		contact: 'John Smith',
+		email: 'john@acme.com',
+		phone: '+1 234-567-8901',
+		status: 'Converted',
+		value: 12500,
+		stage: 'Closed Won',
+		lastContact: '2025-11-08',
+		source: 'AI Campaign',
+	},
+	{
+		id: 2,
+		company: 'Tech Innovations Ltd',
+		contact: 'Sarah Johnson',
+		email: 'sarah@techinnovations.com',
+		phone: '+1 234-567-8902',
+		status: 'Qualified',
+		value: 8900,
+		stage: 'Proposal Sent',
+		lastContact: '2025-11-09',
+		source: 'Referral',
+	},
+	{
+		id: 3,
+		company: 'Global Solutions Inc',
+		contact: 'Michael Chen',
+		email: 'michael@globalsolutions.com',
+		phone: '+1 234-567-8903',
+		status: 'In Progress',
+		value: 15200,
+		stage: 'Demo Scheduled',
+		lastContact: '2025-11-10',
+		source: 'Organic',
+	},
+	{
+		id: 4,
+		company: 'Digital Dynamics',
+		contact: 'Emily Rodriguez',
+		email: 'emily@digitaldynamics.com',
+		phone: '+1 234-567-8904',
+		status: 'Converted',
+		value: 9800,
+		stage: 'Closed Won',
+		lastContact: '2025-11-10',
+		source: 'AI Campaign',
+	},
+	{
+		id: 5,
+		company: 'Future Systems',
+		contact: 'David Park',
+		email: 'david@futuresystems.com',
+		phone: '+1 234-567-8905',
+		status: 'Qualified',
+		value: 11300,
+		stage: 'Needs Analysis',
+		lastContact: '2025-11-11',
+		source: 'LinkedIn',
+	},
+	{
+		id: 6,
+		company: 'Smart Analytics Co',
+		contact: 'Lisa Wong',
+		email: 'lisa@smartanalytics.com',
+		phone: '+1 234-567-8906',
+		status: 'New',
+		value: 7600,
+		stage: 'Initial Contact',
+		lastContact: '2025-11-11',
+		source: 'AI Campaign',
+	},
 ];
 
-const conversionStats = {
-  total: 156,
-  converted: 68,
-  qualified: 42,
-  inProgress: 34,
-  new: 12,
-};
-
 export function MyLeads() {
-  const activeLeads = myLeads.filter(lead => lead.status !== 'Converted');
-  const convertedLeads = myLeads.filter(lead => lead.status === 'Converted');
+	const [query, setQuery] = useState('');
+	const [stageFilter, setStageFilter] = useState('all');
 
-  return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-slate-900 mb-2">My Leads</h1>
-          <p className="text-slate-600">Manage and track your sales pipeline</p>
-        </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Lead
-        </Button>
-      </div>
+	const initials = (name: string) =>
+		name
+			.split(' ')
+			.map((s) => s[0])
+			.slice(0, 2)
+			.join('')
+			.toUpperCase();
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-slate-600">Total Leads</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-slate-900">{conversionStats.total}</div>
-          </CardContent>
-        </Card>
+	const statusClass = (status: string) => {
+		switch (status) {
+			case 'Converted':
+				return 'bg-green-100 text-green-800';
+			case 'Qualified':
+				return 'bg-yellow-100 text-yellow-800';
+			case 'In Progress':
+				return 'bg-blue-100 text-blue-800';
+			case 'New':
+			default:
+				return 'bg-gray-100 text-gray-800';
+		}
+	};
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-slate-600">Converted</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-slate-900">{conversionStats.converted}</div>
-            <p className="text-slate-600">43.6% rate</p>
-          </CardContent>
-        </Card>
+	const stages = Array.from(new Set(myLeads.map((l) => l.stage)));
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-slate-600">Qualified</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-slate-900">{conversionStats.qualified}</div>
-          </CardContent>
-        </Card>
+	const filtered = myLeads.filter((lead) => {
+		const matchesQuery = [lead.company, lead.contact, lead.email, lead.phone]
+			.join(' ')
+			.toLowerCase()
+			.includes(query.toLowerCase());
+		const matchesStage = stageFilter === 'all' ? true : lead.stage === stageFilter;
+		return matchesQuery && matchesStage;
+	});
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-slate-600">In Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-slate-900">{conversionStats.inProgress}</div>
-          </CardContent>
-        </Card>
+	return (
+		<div className="p-8">
+			<div className="flex items-center justify-between mb-6">
+				<div>
+					<h1 className="text-slate-900 mb-1 text-lg font-semibold">My Leads</h1>
+					<p className="text-slate-600 text-sm">Card grid view — quick actions and badges.</p>
+				</div>
+				<div className="flex items-center gap-3">
+					<div className="flex items-center gap-2">
+						<Input
+							placeholder="Search leads by company, contact, email..."
+							value={query}
+							onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
+							className="pl-10"
+						/>
+						<Search className="absolute ml-3 w-4 h-4 text-slate-400" />
+					</div>
+					<select
+						value={stageFilter}
+						onChange={(e) => setStageFilter(e.target.value)}
+						className="rounded-md border px-3 py-2 text-sm bg-white"
+					>
+						<option value="all">All stages</option>
+						{stages.map((s) => (
+							<option key={s} value={s}>
+								{s}
+							</option>
+						))}
+					</select>
+					<Button>
+						<Plus className="w-4 h-4 mr-2" />
+						Add Lead
+					</Button>
+				</div>
+			</div>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-slate-600">New</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-slate-900">{conversionStats.new}</div>
-          </CardContent>
-        </Card>
-      </div>
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+				{filtered.map((lead) => (
+					<Card key={lead.id} className="shadow-sm hover:shadow-md transition-shadow">
+						<CardContent className="p-4">
+							<div className="flex items-start gap-4">
+								<div className="flex-shrink-0">
+									<div className="h-12 w-12 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-400 to-indigo-600 text-white font-semibold">
+										{initials(lead.company)}
+									</div>
+								</div>
 
-      {/* Search and Filter */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input placeholder="Search leads..." className="pl-10" />
-            </div>
-            <Button variant="outline">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+								<div className="flex-1">
+									<div className="flex items-start justify-between gap-4">
+										<div>
+											<h3 className="text-slate-900 font-medium">{lead.company}</h3>
+											<p className="text-slate-600 text-sm">{lead.contact}</p>
+										</div>
+										<div className="text-right">
+											<div className={`inline-flex items-center gap-2 px-2 py-1 rounded ${statusClass(lead.status)}`}>
+												<span className="text-xs font-semibold">{lead.status}</span>
+											</div>
+										</div>
+									</div>
 
-      {/* Leads Tabs */}
-      <Tabs defaultValue="active" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="active">Active ({activeLeads.length})</TabsTrigger>
-          <TabsTrigger value="converted">Converted ({convertedLeads.length})</TabsTrigger>
-          <TabsTrigger value="all">All Leads ({myLeads.length})</TabsTrigger>
-        </TabsList>
+									<div className="mt-3 flex items-center justify-between text-sm text-slate-600">
+										<div className="space-y-1">
+											<div className="flex items-center gap-2">
+												<Mail className="w-4 h-4" />
+												<span className="truncate max-w-[160px]">{lead.email}</span>
+											</div>
+											<div className="flex items-center gap-2">
+												<Phone className="w-4 h-4" />
+												<span>{lead.phone}</span>
+											</div>
+										</div>
 
-        <TabsContent value="active" className="space-y-4">
-          {activeLeads.map((lead) => (
-            <Card key={lead.id} className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-slate-900">{lead.company}</h3>
-                      <Badge
-                        variant={
-                          lead.status === 'Qualified'
-                            ? 'default'
-                            : lead.status === 'In Progress'
-                            ? 'secondary'
-                            : 'outline'
-                        }
-                      >
-                        {lead.status}
-                      </Badge>
-                      <Badge variant="outline">{lead.stage}</Badge>
-                    </div>
-                    <p className="text-slate-600 mb-3">{lead.contact}</p>
-                    <div className="flex items-center gap-6 text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" />
-                        {lead.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="w-4 h-4" />
-                        {lead.phone}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        ${lead.value.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-slate-600 mb-2">Source: {lead.source}</p>
-                    <p className="text-slate-500 flex items-center gap-1 justify-end">
-                      <Calendar className="w-4 h-4" />
-                      Last contact:{' '}
-                      {new Date(lead.lastContact).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button size="sm">Update Status</Button>
-                  <Button size="sm" variant="outline">
-                    Schedule Follow-up
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Add Note
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
+										<div className="text-right">
+											<div className="text-slate-900 font-semibold">${lead.value.toLocaleString()}</div>
+											<div className="text-slate-500 text-xs mt-1">{lead.stage}</div>
+											<div className="text-slate-400 text-xs mt-1 flex items-center gap-1 justify-end">
+												<Calendar className="w-3 h-3" />
+												{new Date(lead.lastContact).toLocaleDateString('en-US', {
+													month: 'short',
+													day: 'numeric',
+												})}
+											</div>
+										</div>
+									</div>
 
-        <TabsContent value="converted" className="space-y-4">
-          {convertedLeads.map((lead) => (
-            <Card key={lead.id} className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-slate-900">{lead.company}</h3>
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
-                        {lead.status}
-                      </Badge>
-                      <Badge variant="outline">{lead.stage}</Badge>
-                    </div>
-                    <p className="text-slate-600 mb-3">{lead.contact}</p>
-                    <div className="flex items-center gap-6 text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" />
-                        {lead.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        ${lead.value.toLocaleString()}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        Closed: {new Date(lead.lastContact).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
+									<div className="mt-4 flex gap-2">
+										<Button size="sm">Update</Button>
+										<Button size="sm" variant="outline">
+											Follow-up
+										</Button>
+										<Button size="sm" variant="ghost">
+											Notes
+										</Button>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				))}
+			</div>
 
-        <TabsContent value="all" className="space-y-4">
-          {myLeads.map((lead) => (
-            <Card key={lead.id} className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-slate-900">{lead.company}</h3>
-                      <Badge
-                        variant={
-                          lead.status === 'Converted'
-                            ? 'default'
-                            : lead.status === 'Qualified'
-                            ? 'secondary'
-                            : 'outline'
-                        }
-                      >
-                        {lead.status}
-                      </Badge>
-                      <Badge variant="outline">{lead.stage}</Badge>
-                    </div>
-                    <p className="text-slate-600 mb-3">{lead.contact}</p>
-                    <div className="flex items-center gap-6 text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-4 h-4" />
-                        {lead.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="w-4 h-4" />
-                        {lead.phone}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4" />
-                        ${lead.value.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-slate-600 mb-2">Source: {lead.source}</p>
-                    <p className="text-slate-500">
-                      {new Date(lead.lastContact).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+			{filtered.length === 0 && (
+				<div className="mt-10 text-center text-slate-500">No leads match your search.</div>
+			)}
+		</div>
+	);
 }

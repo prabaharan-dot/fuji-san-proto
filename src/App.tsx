@@ -9,6 +9,7 @@ export default function App() {
   const [role, setRole] = useState<'admin' | 'user'>('admin');
   const [adminView, setAdminView] = useState<AdminViewType>('dashboard');
   const [userView, setUserView] = useState<UserViewType>('dashboard');
+  const [showBanner, setShowBanner] = useState(true);
 
   const handleNavigate = (view: AppView) => {
     if (role === 'admin') setAdminView(view as AdminViewType);
